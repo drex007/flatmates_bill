@@ -5,7 +5,7 @@ pdf.add_page()
 pdf.set_font(family='Times', size=24, style='B')
 pdf.cell(w=150, h=88, txt = "Flatmate Bill", border = 1, align ='C', ln = 1)
 pdf.cell(w=100, h=70, txt ="Period", border=1)
-pdf.output("Bill.pdf")
+pdf.output("Bills.pdf")
 
 
 

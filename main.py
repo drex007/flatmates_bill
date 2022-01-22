@@ -1,71 +1,28 @@
-import webbrowser 
-from fpdf import FPDF
-
-class Bill:
-    def __init__(self, amount,period):
-        self.period = period
-        self.amount = amount
+from flat_bill import Bill, Flatmates
+from reports import PdfReport
 
 
-class Flatmates:
+users_amount = float(input("Please Enter Amount:"))
+users_period = input("Please Enter Period:")
 
-    def __init__(self, name, days_in_house ):
-        self.days_in_house = days_in_house
-        self.name = name
+name1 = input("Flatmate1:")
+days_in_house1 = int(input(f"Days in whic {name1} stay in the house? :"))
 
-    def pay(self, bill, flatmate2):
-        weight = self.days_in_house / (self.days_in_house + flatmate2.days_in_house)
-        topay = bill.amount * weight
-        return topay
+name2 = input("Flatmate2:")
+days_in_house2 = int(input(f"Days in whic {name2} stay in the house?:"))
 
 
+the_bill = Bill(amount =users_amount, period=users_period)
+flatmate1 = Flatmates(name1, days_in_house1)
+flatmate2 = Flatmates(name2, days_in_house2)
 
-class PdfReport:
-
-    def __init__(self,filename):
-        self.filename = filename 
-
-    def generate(self, flatmate1, flatmate2, bill):
-        pdf = FPDF(orientation='P', unit='pt' , format='A4')
-        
-        pdf.add_page()
-        pdf.image("house.png", w = 30, h =30)
-        pdf.set_font(family='Times', size=24, style='B')
-        pdf.cell(w=0, h=88, txt = "Flatmate Bill", border = 1, align ='C', ln = 1)
-
-
-        # Insert Period label and values
-
-
-
-        pdf.set_font(family="Times", size = 14 , style='B')
-
-        pdf.cell(w=100, h=70, txt ="Period:", border=0)
-        pdf.cell(w=100, h=70, txt = bill.period, border=0, ln=1)
-
-        # insert name and the amount of first flatmate
-
-        pdf.cell(w=100, h=20, txt =flatmate1.name + " Pays", border=0)
-        pdf.cell(w=100, h=20, txt = "$"+str(round(flatmate1.pay(bill,flatmate2), 2)),border=0 , ln=1)
-        pdf.cell(w=100, h=20, txt =flatmate2.name + " Pays", border=0)
-        pdf.cell(w=100, h=20, txt = "$"+str(round(flatmate2.pay(bill,flatmate1), 2)),border=0 , ln=1)
-        pdf.output(self.filename)
-
-        webbrowser.open(self.filename)
-
-user_amount = float(input("Please Enter Amount:"))
-
-
-the_bill = Bill(amount =user_amount, period="Jan 2022")
-john = Flatmates(name="John", days_in_house=20)
-mary = Flatmates(name = "Mary", days_in_house=25)
-
-pdf_report = PdfReport(filename="Report1.pdf")
-pdf_report.generate(flatmate1=john, flatmate2=mary, bill=the_bill)
+pdf_report = PdfReport(filename=f"{the_bill.period}.pdf")
+pdf_report.generate(flatmate1, flatmate2, the_bill)
 
 
 
 
-print("John pays:", john.pay(bill =the_bill, flatmate2=mary))
-print("Mary pays:", mary.pay(bill =the_bill, flatmate2=john))
+print(f"{name1} pays:", flatmate1.pay(the_bill, flatmate2))
+print(f"{name2} pays:", flatmate2.pay(the_bill, flatmate1))
+
 
